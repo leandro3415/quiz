@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesse Agora</title>
+    <!-- Carregando o Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Links preconnect adicionados -->
+    <link rel="preconnect" href="https://connect.facebook.net" crossorigin>
+    <link rel="preconnect" href="https://s3-cf.zapsafe.work" crossorigin>
+
+    <style>
+        /* Estilos personalizados para o vídeo de fundo */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .video-background-container {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .video-background {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            inset: 0;
+            object-fit: cover;
+            object-position: center center;
+        }
+
+        /* Mobile: viewport dinâmico (barra do navegador) */
+        @supports (height: 100svh) {
+            .video-background-container {
+                height: 100svh;
+            }
+        }
+    </style>
+
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s){
+      if(f.fbq) return; n=f.fbq=function(){ n.callMethod ?
+      n.callMethod.apply(n,arguments) : n.queue.push(arguments) };
+      if(!f._fbq) f._fbq=n; n.push=n; n.loaded=!0; n.version='2.0';
+      n.queue=[]; t=b.createElement(e); t.async=!0;
+      t.src=v; s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s);
+    }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+
+    // IDs dos Pixels
+    var pixelIds = [
+      '1032225729043782'
+    ];
+
+    // Inicializa todos os pixels
+    pixelIds.forEach(function(id){ fbq('init', id); });
+
+    // Dispara PageView para TODOS os pixels inicializados
+    fbq('track', 'PageView');
+    </script>
+</head>
+<body class="bg-black text-white">
+
+    <!-- Vídeo de fundo -->
+    <div class="video-background-container">
+        <!--
+          Vídeo local (loop):
+          - Coloque o ficheiro em: quiz/assets/video-poster.mp4
+          - O atributo `loop` mantém o vídeo a repetir.
+
+          Fallback (opcional):
+          - Mantém um URL público como segunda <source> se quiseres.
+        -->
+        <video id="bg-video" class="video-background" autoplay loop muted playsinline webkit-playsinline preload="auto">
+            <source src="assets/video-poster.mp4" type="video/mp4">
+            <source src="https://s3-cf.zapsafe.work/SEUTROQUEAQUI/videofundo2.mp4" type="video/mp4">
+            O seu navegador não suporta a tag de vídeo.
+        </video>
+    </div>
+
+    <!-- Contêiner principal que centraliza o conteúdo -->
+    <main class="relative z-10 flex flex-col items-center justify-center min-h-screen p-4">
+        <!-- Overlay para melhorar legibilidade -->
+        <div class="absolute inset-0 bg-black opacity-50"></div>
+
+        <!-- Conteúdo do Quiz, posicionado acima do overlay -->
+        <div id="quiz-container" class="relative w-full max-w-sm mx-auto transition-all duration-500 ease-in-out">
+            <!-- Card do Quiz com efeito de vidro (glassmorphism) -->
+            <div class="bg-black/40 backdrop-blur-md rounded-2xl shadow-xl p-6 pt-16 text-center min-h-[350px] flex flex-col justify-center">
+                <!-- Avatar redondo, posicionado para fora do card -->
+                <img id="avatar-img" src="assets/avatar-carol.png" alt="Foto de Carol" class="w-24 h-24 rounded-full mx-auto -mt-28 border-4 border-white/30 shadow-lg object-cover">
+
+                <!-- Conteúdo Padrão do Quiz -->
+                <div id="quiz-content">
+                    <!-- Status Online -->
+                    <div class="flex items-center justify-center gap-2 mt-4">
+                        <span class="relative flex h-3 w-3">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                        </span>
+                        <span class="text-sm font-medium text-green-300">Carol está online...</span>
+                    </div>
+
+                    <!-- Texto da pergunta -->
+                    <p id="question-text" class="text-xl font-medium mt-2 mb-4 min-h-[84px] flex items-center justify-center">
+                        <!-- Initial Loading Spinner -->
+                        <svg class="animate-spin h-8 w-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </p>
+
+                    <!-- Botões de Resposta lado a lado -->
+                    <div class="flex gap-4 justify-center">
+                        <button id="no-btn" class="w-full bg-white/20 text-white font-bold py-3 px-4 rounded-lg hover:bg-white/30 transition-all duration-300 transform hover:scale-105">
+                            Não
+                        </button>
+                        <button id="yes-btn" class="w-full bg-gradient-to-r from-pink-500 to-orange-400 text-white font-bold py-3 px-4 rounded-lg shadow-md hover:opacity-90 transition-all duration-300 transform hover:scale-105">
+                            Sim
+                        </button>
+                    </div>
+
+                    <!-- Informação de Localização -->
+                    <div id="location-info" class="text-xs text-white/60 mt-4 text-center">
+                        <!-- Conteúdo será injetado pelo JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Conteúdo de Redirecionamento (inicialmente oculto) -->
+                <div id="redirect-content" class="hidden">
+                    <!-- Ícone de carregamento (spinner) -->
+                    <svg class="animate-spin h-12 w-12 text-white mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <p id="redirect-text" class="mt-4 text-lg font-medium text-white/90">
+                        Redirecionando você...
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // --- Lógica do Quiz ---
+
+        /*
+          Supabase (orientação):
+          - Este quiz NÃO precisa de Supabase para funcionar (redirect final vai para `rotaciona`).
+          - Se no futuro quiseres buscar dados no browser, usa a **anon public** e cria **RLS policies** de leitura.
+          - URL típica do REST: `${SUPABASE_URL}/rest/v1/TABELA`
+
+          Cola aqui (opcional) quando fores implementar fetch:
+        */
+        // Quando fores usar Supabase no browser, define estas variáveis e implementa o fetch:
+        // const SUPABASE_URL = "https://xxxx.supabase.co";
+        // const SUPABASE_ANON_KEY = "SUA_ANON_PUBLICA";
+
+        const ROTACIONA_URL = "https://rotaciona.vercel.app/";
+
+        const quizData = [
+            {
+                question: "Carol está online agora, vamos conversar no WhatsApp?",
+                avatar: "assets/avatar-carol.png"
+            },
+            {
+                question: "Eu realmente respondo, mas não gosto de perder tempo atoa. Você vai me dar atenção?",
+                avatar: "assets/avatar-carol.png"
+            },
+            {
+                question: "Eu quero te mostrar umas coisinhas 🔞😈, posso? 😏",
+                avatar: "assets/avatar-carol.png"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+
+        const quizContainer = document.getElementById('quiz-container');
+        const questionText = document.getElementById('question-text');
+        const avatarImg = document.getElementById('avatar-img');
+        const yesBtn = document.getElementById('yes-btn');
+        const noBtn = document.getElementById('no-btn');
+        const locationInfo = document.getElementById('location-info');
+        const quizContent = document.getElementById('quiz-content');
+        const redirectContent = document.getElementById('redirect-content');
+        const redirectText = document.getElementById('redirect-text');
+
+        function showQuestion(index) {
+            questionText.textContent = quizData[index].question;
+            avatarImg.src = quizData[index].avatar;
+            avatarImg.alt = `Avatar para a pergunta ${index + 1}`;
+        }
+
+        function startRedirect() {
+            quizContent.classList.add('hidden');
+            redirectContent.classList.remove('hidden');
+
+            redirectText.textContent = "Abrindo a Conversa com a Carol ...";
+            
+            setTimeout(() => {
+                window.location.href = ROTACIONA_URL;
+            }, 3000);
+        }
+
+        function handleAnswer() {
+            if (currentQuestionIndex === quizData.length - 1) {
+                startRedirect();
+                return;
+            }
+
+            quizContainer.classList.add('opacity-0', 'scale-95');
+            
+            setTimeout(() => {
+                currentQuestionIndex++;
+                showQuestion(currentQuestionIndex);
+                quizContainer.classList.remove('opacity-0', 'scale-95');
+            }, 500);
+        }
+
+        yesBtn.addEventListener('click', handleAnswer);
+        noBtn.addEventListener('click', handleAnswer);
+
+        window.addEventListener('load', () => {
+            quizContainer.style.opacity = '0';
+            
+            const minKm = 5;
+            const maxKm = 31;
+            const randomKm = Math.floor(Math.random() * (maxKm - minKm + 1)) + minKm;
+            locationInfo.textContent = `📍Perto de você! Na sua região, a somente ${randomKm} km disponível para conversar`;
+            
+            showQuestion(currentQuestionIndex);
+            
+            setTimeout(() => {
+                quizContainer.style.opacity = '1';
+            }, 100);
+        });
+
+        // Garante autoplay + loop (alguns browsers são mais exigentes com vídeo em background)
+        (function setupBackgroundVideo() {
+            const v = document.getElementById("bg-video");
+            if (!v) return;
+            try {
+                v.muted = true;
+                v.defaultMuted = true;
+                v.loop = true;
+                v.playsInline = true;
+                v.setAttribute("playsinline", "");
+                v.setAttribute("webkit-playsinline", "");
+            } catch {
+                /* ignore */
+            }
+
+            const tryPlay = () => {
+                const p = v.play && v.play();
+                if (p && typeof p.catch === "function") p.catch(() => {});
+            };
+
+            v.addEventListener("ended", () => {
+                try {
+                    v.currentTime = 0;
+                } catch {
+                    /* ignore */
+                }
+                tryPlay();
+            });
+
+            window.addEventListener("load", tryPlay, { once: true });
+            document.addEventListener("visibilitychange", () => {
+                if (!document.hidden) tryPlay();
+            });
+        })();
+
+    </script>
+</body>
+</html>

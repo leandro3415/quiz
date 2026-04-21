@@ -1,0 +1,14 @@
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor / tooling
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Env / secrets (se existirem no futuro)
+.env
+.env.*
