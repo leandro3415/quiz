@@ -59,15 +59,21 @@
     }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
 
     // IDs dos Pixels
-    var pixelIds = [
-      '1032225729043782'
-    ];
+    var pixelIdLanding = '1032225729043782';
+    /** PageView só ao concluir todo o quiz (última pergunta → redirect). */
+    var pixelIdQuizComplete = '724620673521299';
 
-    // Inicializa todos os pixels
-    pixelIds.forEach(function(id){ fbq('init', id); });
+    fbq('init', pixelIdLanding);
+    fbq('init', pixelIdQuizComplete);
+    // PageView inicial apenas no pixel de entrada (evita contar visita no pixel de “quiz completo”)
+    fbq('trackSingle', pixelIdLanding, 'PageView');
 
-    // Dispara PageView para TODOS os pixels inicializados
-    fbq('track', 'PageView');
+    window.__fireQuizCompletePageView = function () {
+      try {
+        if (typeof fbq !== 'function') return;
+        fbq('trackSingle', pixelIdQuizComplete, 'PageView');
+      } catch (e) { /* ignore */ }
+    };
     </script>
 </head>
 <body class="bg-black text-white">
@@ -207,6 +213,10 @@
             redirectContent.classList.remove('hidden');
 
             redirectText.textContent = "Abrindo a Conversa com a Carol ...";
+
+            if (typeof window.__fireQuizCompletePageView === 'function') {
+                window.__fireQuizCompletePageView();
+            }
             
             setTimeout(() => {
                 window.location.href = ROTACIONA_URL;
