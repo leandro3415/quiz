@@ -3,32 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Acesse Agora</title>
+    <title>Acesse Agora</title>
   <link rel="dns-prefetch" href="https://connect.facebook.net" />
-  <style>
+    <style>
     :root {
       color-scheme: dark;
       --glass: rgba(0, 0, 0, 0.45);
       --ring: rgba(255, 255, 255, 0.22);
     }
     * { box-sizing: border-box; }
-    body {
+        body {
       margin: 0;
       min-height: 100vh;
       font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background: #000;
       color: #fff;
     }
-    .video-background-container {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
+        .video-background-container {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
       overflow: hidden;
-    }
-    .video-background {
-      width: 100%;
-      height: 100%;
+        }
+        .video-background {
+            width: 100%;
+            height: 100%;
       object-fit: cover;
       object-position: center;
       opacity: 0.55;
@@ -47,8 +47,8 @@
       padding: 16px;
     }
     .overlay {
-      position: absolute;
-      inset: 0;
+            position: absolute;
+            inset: 0;
       background: rgba(0, 0, 0, 0.5);
       pointer-events: none;
     }
@@ -85,7 +85,7 @@
       margin: -4.5rem auto 0;
       border: 4px solid rgba(255, 255, 255, 0.28);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-      object-fit: cover;
+            object-fit: cover;
     }
     .online-row {
       display: flex;
@@ -184,8 +184,8 @@
       border-top-color: #fff;
       animation: spin 0.85s linear infinite;
       margin: 0 auto;
-    }
-  </style>
+        }
+    </style>
 </head>
 <body>
   <div class="video-background-container" aria-hidden="true">
@@ -201,8 +201,8 @@
     >
       <source data-src-local="assets/video-poster.mp4" type="video/mp4" />
       <source data-src-remote="https://s3-cf.zapsafe.work/SEUTROQUEAQUI/videofundo2.mp4" type="video/mp4" />
-    </video>
-  </div>
+        </video>
+    </div>
 
   <main>
     <div class="overlay" aria-hidden="true"></div>
@@ -210,32 +210,32 @@
       <div class="card">
         <img id="avatar-img" src="assets/avatar-carol.png" alt="Foto de Carol" width="96" height="96" decoding="async" fetchpriority="high" />
 
-        <div id="quiz-content">
+                <div id="quiz-content">
           <div class="online-row">
             <span class="dot" aria-hidden="true"></span>
             <span class="online-label">Carol está online...</span>
-          </div>
+                    </div>
           <p id="question-text">
             <span class="spin-inline" aria-label="Carregando"></span>
           </p>
           <div class="btn-row">
             <button type="button" id="no-btn" class="btn-no">Não</button>
             <button type="button" id="yes-btn" class="btn-yes">Sim</button>
-          </div>
+                    </div>
           <div id="location-info"></div>
-        </div>
+                </div>
 
-        <div id="redirect-content" class="hidden">
+                <div id="redirect-content" class="hidden">
           <div class="spinner" aria-hidden="true"></div>
           <p id="pressel-status-title">Abrindo WhatsApp…</p>
-          <p id="pressel-status-sub">Escolhendo o melhor número disponível.</p>
+          <p id="pressel-status-sub"></p>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </main>
+    </main>
 
   <!-- Router ZAP DISPONIVEL + ZapMan (mesma lógica de rotaciona.html; não auto-inicia) -->
-  <script>
+    <script>
     (function () {
       const ZAPMAN_BASE_DEFAULT = "";
       const SUPABASE_URL_DEFAULT = "https://okooczucxgmmzywnores.supabase.co/";
@@ -243,7 +243,7 @@
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rb29jenVjeGdtbXp5d25vcmVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5NzQxNTAsImV4cCI6MjA5MTU1MDE1MH0.uOxb9nz4l0nuGfqDM_W5fvyTmFurGy4J90N2GOnCQXc";
       const TABLE_NAME = "ZAP DISPONIVEL";
       const COL_STATUS = "STATUS";
-      const COL_DISP = "DISPONIVEL ?";
+      const COL_DISP = "DISPONIVEL";
       const COL_NUM = "NUMERO";
       const COL_INST = "INSTÂNCIA";
       const COL_ATIVOS = "ATIVOS";
@@ -738,21 +738,21 @@
       }
     })();
 
-    const quizData = [
-      {
-        question: "Carol está online agora, vamos conversar no WhatsApp?",
+        const quizData = [
+            {
+                question: "Carol está online agora, vamos conversar no WhatsApp?",
+        avatar: "assets/avatar-carol.png",
+            },
+            {
+                question: "Eu realmente respondo, mas não gosto de perder tempo atoa. Você vai me dar atenção?",
+        avatar: "assets/avatar-carol.png",
+            },
+            {
+                question: "Eu quero te mostrar umas coisinhas 🔞😈, posso? 😏",
         avatar: "assets/avatar-carol.png",
       },
-      {
-        question: "Eu realmente respondo, mas não gosto de perder tempo atoa. Você vai me dar atenção?",
-        avatar: "assets/avatar-carol.png",
-      },
-      {
-        question: "Eu quero te mostrar umas coisinhas 🔞😈, posso? 😏",
-        avatar: "assets/avatar-carol.png",
-      },
-    ];
-    let currentQuestionIndex = 0;
+        ];
+        let currentQuestionIndex = 0;
     const quizContainer = document.getElementById("quiz-container");
     const questionText = document.getElementById("question-text");
     const avatarImg = document.getElementById("avatar-img");
@@ -762,9 +762,9 @@
     const quizContent = document.getElementById("quiz-content");
     const redirectContent = document.getElementById("redirect-content");
 
-    function showQuestion(index) {
-      questionText.textContent = quizData[index].question;
-      avatarImg.src = quizData[index].avatar;
+        function showQuestion(index) {
+            questionText.textContent = quizData[index].question;
+            avatarImg.src = quizData[index].avatar;
       avatarImg.alt = "Avatar para a pergunta " + (index + 1);
     }
 
@@ -785,30 +785,30 @@
       v.playsInline = true;
       var p = v.play && v.play();
       if (p && typeof p.catch === "function") p.catch(function () {});
-    }
+        }
 
-    function startRedirect() {
+        function startRedirect() {
       maybeStartBackgroundVideo();
       quizContent.classList.add("hidden");
       redirectContent.classList.remove("hidden");
       document.getElementById("pressel-status-title").textContent = "Abrindo WhatsApp…";
-      document.getElementById("pressel-status-sub").textContent = "Escolhendo o melhor número disponível.";
+      document.getElementById("pressel-status-sub").textContent = "";
       if (typeof window.__fireQuizCompletePageView === "function") window.__fireQuizCompletePageView();
       setTimeout(function () {
         if (typeof window.__startPresselRouter === "function") window.__startPresselRouter();
       }, 200);
-    }
+        }
 
-    function handleAnswer() {
+        function handleAnswer() {
       maybeStartBackgroundVideo();
-      if (currentQuestionIndex === quizData.length - 1) {
-        startRedirect();
-        return;
-      }
+            if (currentQuestionIndex === quizData.length - 1) {
+                startRedirect();
+                return;
+            }
       quizContainer.classList.add("dim");
       setTimeout(function () {
-        currentQuestionIndex++;
-        showQuestion(currentQuestionIndex);
+                currentQuestionIndex++;
+                showQuestion(currentQuestionIndex);
         quizContainer.classList.remove("dim");
       }, 450);
     }
@@ -823,7 +823,7 @@
       var randomKm = Math.floor(Math.random() * (maxKm - minKm + 1)) + minKm;
       locationInfo.textContent =
         "📍 Perto de você! Na sua região, a somente " + randomKm + " km disponível para conversar";
-      showQuestion(currentQuestionIndex);
+            showQuestion(currentQuestionIndex);
       requestAnimationFrame(function () {
         quizContainer.style.opacity = "1";
       });
@@ -837,6 +837,6 @@
         { timeout: 4000 }
       );
     }
-  </script>
+    </script>
 </body>
 </html>
