@@ -1,286 +1,842 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Acesse Agora</title>
-    <!-- Carregando o Tailwind CSS via CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    
-    <!-- Links preconnect adicionados -->
-    <link rel="preconnect" href="https://connect.facebook.net" crossorigin>
-    <link rel="preconnect" href="https://s3-cf.zapsafe.work" crossorigin>
-
+  <link rel="dns-prefetch" href="https://connect.facebook.net" />
     <style>
-        /* Estilos personalizados para o vídeo de fundo */
+    :root {
+      color-scheme: dark;
+      --glass: rgba(0, 0, 0, 0.45);
+      --ring: rgba(255, 255, 255, 0.22);
+    }
+    * { box-sizing: border-box; }
         body {
-            font-family: 'Inter', sans-serif;
-        }
-
+      margin: 0;
+      min-height: 100vh;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #000;
+      color: #fff;
+    }
         .video-background-container {
             position: fixed;
             inset: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
             z-index: 0;
             pointer-events: none;
+      overflow: hidden;
         }
-
         .video-background {
             width: 100%;
             height: 100%;
+      object-fit: cover;
+      object-position: center;
+      opacity: 0.55;
+    }
+    @supports (height: 100svh) {
+      .video-background-container { height: 100svh; }
+    }
+    main {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .overlay {
             position: absolute;
             inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      pointer-events: none;
+    }
+    #quiz-container {
+      position: relative;
+      width: 100%;
+      max-width: 22rem;
+      margin: 0 auto;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+    #quiz-container.dim {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    .card {
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 1rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+      padding: 1.5rem;
+      padding-top: 4rem;
+      text-align: center;
+      min-height: 22rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border: 1px solid var(--ring);
+    }
+    #avatar-img {
+      width: 6rem;
+      height: 6rem;
+      border-radius: 999px;
+      margin: -4.5rem auto 0;
+      border: 4px solid rgba(255, 255, 255, 0.28);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
             object-fit: cover;
-            object-position: center center;
-        }
-
-        /* Mobile: viewport dinâmico (barra do navegador) */
-        @supports (height: 100svh) {
-            .video-background-container {
-                height: 100svh;
-            }
+    }
+    .online-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .dot {
+      width: 0.65rem;
+      height: 0.65rem;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.55);
+      animation: ping 1.4s ease-out infinite;
+    }
+    @keyframes ping {
+      0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.45); }
+      70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .dot { animation: none; }
+    }
+    .online-label { font-size: 0.875rem; font-weight: 500; color: #86efac; }
+    #question-text {
+      font-size: 1.125rem;
+      font-weight: 500;
+      margin: 0.5rem 0 1rem;
+      min-height: 5.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.35;
+    }
+    .btn-row { display: flex; gap: 1rem; justify-content: center; }
+    button {
+      flex: 1;
+      font-weight: 700;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+    button:active { transform: scale(0.98); }
+    .btn-no {
+      background: rgba(255, 255, 255, 0.18);
+      color: #fff;
+    }
+    .btn-no:hover { background: rgba(255, 255, 255, 0.28); }
+    .btn-yes {
+      color: #fff;
+      background: linear-gradient(90deg, #ec4899, #fb923c);
+      box-shadow: 0 4px 14px rgba(236, 72, 153, 0.35);
+    }
+    .btn-yes:hover { opacity: 0.92; }
+    #location-info {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.55);
+      margin-top: 1rem;
+    }
+    .hidden { display: none !important; }
+    #redirect-content .spinner {
+      width: 3rem;
+      height: 3rem;
+      margin: 0 auto;
+      border-radius: 999px;
+      border: 4px solid rgba(255, 255, 255, 0.2);
+      border-top-color: rgba(255, 255, 255, 0.85);
+      animation: spin 0.85s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    #pressel-status-title {
+      margin-top: 1rem;
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+    #pressel-status-sub {
+      margin-top: 0.35rem;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.72);
+      line-height: 1.35;
+      max-width: 22rem;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .spin-inline {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 999px;
+      border: 3px solid rgba(255, 255, 255, 0.2);
+      border-top-color: #fff;
+      animation: spin 0.85s linear infinite;
+      margin: 0 auto;
         }
     </style>
-
-    <!-- Meta Pixel Code -->
-    <script>
-    !function(f,b,e,v,n,t,s){
-      if(f.fbq) return; n=f.fbq=function(){ n.callMethod ?
-      n.callMethod.apply(n,arguments) : n.queue.push(arguments) };
-      if(!f._fbq) f._fbq=n; n.push=n; n.loaded=!0; n.version='2.0';
-      n.queue=[]; t=b.createElement(e); t.async=!0;
-      t.src=v; s=b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t,s);
-    }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
-
-    // IDs dos Pixels
-    var pixelIds = [
-      '1032225729043782'
-    ];
-
-    // Inicializa todos os pixels
-    pixelIds.forEach(function(id){ fbq('init', id); });
-
-    // Dispara PageView para TODOS os pixels inicializados
-    fbq('track', 'PageView');
-    </script>
 </head>
-<body class="bg-black text-white">
-
-    <!-- Vídeo de fundo -->
-    <div class="video-background-container">
-        <!--
-          Vídeo local (loop):
-          - Coloque o ficheiro em: quiz/assets/video-poster.mp4
-          - O atributo `loop` mantém o vídeo a repetir.
-
-          Fallback (opcional):
-          - Mantém um URL público como segunda <source> se quiseres.
-        -->
-        <video id="bg-video" class="video-background" autoplay loop muted playsinline webkit-playsinline preload="auto">
-            <source src="assets/video-poster.mp4" type="video/mp4">
-            <source src="https://s3-cf.zapsafe.work/SEUTROQUEAQUI/videofundo2.mp4" type="video/mp4">
-            O seu navegador não suporta a tag de vídeo.
+<body>
+  <div class="video-background-container" aria-hidden="true">
+    <video
+      id="bg-video"
+      class="video-background"
+      muted
+      loop
+      playsinline
+      webkit-playsinline
+      preload="none"
+      poster="assets/avatar-carol.png"
+    >
+      <source data-src-local="assets/video-poster.mp4" type="video/mp4" />
+      <source data-src-remote="https://s3-cf.zapsafe.work/SEUTROQUEAQUI/videofundo2.mp4" type="video/mp4" />
         </video>
     </div>
 
-    <!-- Contêiner principal que centraliza o conteúdo -->
-    <main class="relative z-10 flex flex-col items-center justify-center min-h-screen p-4">
-        <!-- Overlay para melhorar legibilidade -->
-        <div class="absolute inset-0 bg-black opacity-50"></div>
+  <main>
+    <div class="overlay" aria-hidden="true"></div>
+    <div id="quiz-container">
+      <div class="card">
+        <img id="avatar-img" src="assets/avatar-carol.png" alt="Foto de Carol" width="96" height="96" decoding="async" fetchpriority="high" />
 
-        <!-- Conteúdo do Quiz, posicionado acima do overlay -->
-        <div id="quiz-container" class="relative w-full max-w-sm mx-auto transition-all duration-500 ease-in-out">
-            <!-- Card do Quiz com efeito de vidro (glassmorphism) -->
-            <div class="bg-black/40 backdrop-blur-md rounded-2xl shadow-xl p-6 pt-16 text-center min-h-[350px] flex flex-col justify-center">
-                <!-- Avatar redondo, posicionado para fora do card -->
-                <img id="avatar-img" src="assets/avatar-carol.png" alt="Foto de Carol" class="w-24 h-24 rounded-full mx-auto -mt-28 border-4 border-white/30 shadow-lg object-cover">
-
-                <!-- Conteúdo Padrão do Quiz -->
                 <div id="quiz-content">
-                    <!-- Status Online -->
-                    <div class="flex items-center justify-center gap-2 mt-4">
-                        <span class="relative flex h-3 w-3">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-                        </span>
-                        <span class="text-sm font-medium text-green-300">Carol está online...</span>
+          <div class="online-row">
+            <span class="dot" aria-hidden="true"></span>
+            <span class="online-label">Carol está online...</span>
                     </div>
-
-                    <!-- Texto da pergunta -->
-                    <p id="question-text" class="text-xl font-medium mt-2 mb-4 min-h-[84px] flex items-center justify-center">
-                        <!-- Initial Loading Spinner -->
-                        <svg class="animate-spin h-8 w-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                    </p>
-
-                    <!-- Botões de Resposta lado a lado -->
-                    <div class="flex gap-4 justify-center">
-                        <button id="no-btn" class="w-full bg-white/20 text-white font-bold py-3 px-4 rounded-lg hover:bg-white/30 transition-all duration-300 transform hover:scale-105">
-                            Não
-                        </button>
-                        <button id="yes-btn" class="w-full bg-gradient-to-r from-pink-500 to-orange-400 text-white font-bold py-3 px-4 rounded-lg shadow-md hover:opacity-90 transition-all duration-300 transform hover:scale-105">
-                            Sim
-                        </button>
+          <p id="question-text">
+            <span class="spin-inline" aria-label="Carregando"></span>
+          </p>
+          <div class="btn-row">
+            <button type="button" id="no-btn" class="btn-no">Não</button>
+            <button type="button" id="yes-btn" class="btn-yes">Sim</button>
                     </div>
-
-                    <!-- Informação de Localização -->
-                    <div id="location-info" class="text-xs text-white/60 mt-4 text-center">
-                        <!-- Conteúdo será injetado pelo JavaScript -->
-                    </div>
+          <div id="location-info"></div>
                 </div>
 
-                <!-- Conteúdo de Redirecionamento (inicialmente oculto) -->
                 <div id="redirect-content" class="hidden">
-                    <!-- Ícone de carregamento (spinner) -->
-                    <svg class="animate-spin h-12 w-12 text-white mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <p id="redirect-text" class="mt-4 text-lg font-medium text-white/90">
-                        Redirecionando você...
-                    </p>
+          <div class="spinner" aria-hidden="true"></div>
+          <p id="pressel-status-title">Abrindo WhatsApp…</p>
+          <p id="pressel-status-sub"></p>
                 </div>
             </div>
         </div>
     </main>
 
+  <!-- Router ZAP DISPONIVEL + ZapMan (mesma lógica de rotaciona.html; não auto-inicia) -->
     <script>
-        // --- Lógica do Quiz ---
+    (function () {
+      const ZAPMAN_BASE_DEFAULT = "";
+      const SUPABASE_URL_DEFAULT = "https://ksseeadjghthpeqefdub.supabase.co/";
+      const SUPABASE_ANON_KEY_DEFAULT =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtzc2VlYWRqZ2h0aHBlcWVmZHViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyODg1NjUsImV4cCI6MjA5Mzg2NDU2NX0.gCHz8trDWooYo7B6gA8GFPS5aIgxIO52Rdvj-taO5N4";
+      const TABLE_NAME = "ZAP DISPONIVEL";
+      const COL_STATUS = "STATUS";
+      const COL_DISP = "DISPONIVEL";
+      const COL_NUM = "NUMERO";
+      const COL_INST = "INSTÂNCIA";
+      const COL_ATIVOS = "ATIVOS";
+      const COL_LIMITE = "LIMITE";
+      const COL_LEADS_HOJE = "LEADS_HOJE";
+      const COL_LAST_ASSIGNED_AT = "LAST_ASSIGNED_AT";
+      const UPDATE_ZAP_DISPONIVEL_COUNTERS =
+        String(new URL(window.location.href).searchParams.get("update_counters") || "").trim() === "1";
+      const RETRY_MS = 1200;
+      const REQ_TIMEOUT_MS = 5000;
 
-        /*
-          Supabase (orientação):
-          - Este quiz NÃO precisa de Supabase para funcionar (redirect final vai para `rotaciona`).
-          - Se no futuro quiseres buscar dados no browser, usa a **anon public** e cria **RLS policies** de leitura.
-          - URL típica do REST: `${SUPABASE_URL}/rest/v1/TABELA`
+      function readSupabaseConfigFromQuery() {
+        try {
+          const u = new URL(window.location.href);
+          return {
+            sbUrl: String(u.searchParams.get("sb_url") || "").trim(),
+            sbAnon: String(u.searchParams.get("sb_anon") || "").trim(),
+          };
+        } catch {
+          return { sbUrl: "", sbAnon: "" };
+        }
+      }
+      function readZapmanConfigFromQuery() {
+        try {
+          const u = new URL(window.location.href);
+          return {
+            zap: String(u.searchParams.get("zapman") || u.searchParams.get("zapman_base") || "").trim(),
+            sec: String(u.searchParams.get("cluster_secret") || u.searchParams.get("zapman_secret") || "").trim(),
+          };
+        } catch {
+          return { zap: "", sec: "" };
+        }
+      }
+      const __q = readSupabaseConfigFromQuery();
+      const __z = readZapmanConfigFromQuery();
+      const ZAPMAN_BASE = (__z.zap || ZAPMAN_BASE_DEFAULT || "").trim().replace(/\/+$/, "");
+      const ZAPMAN_CLUSTER_SECRET = (__z.sec || "").trim();
+      const SUPABASE_URL = (__q.sbUrl || SUPABASE_URL_DEFAULT || "").trim();
+      const SUPABASE_ANON_KEY = (__q.sbAnon || SUPABASE_ANON_KEY_DEFAULT || "").trim();
 
-          Cola aqui (opcional) quando fores implementar fetch:
-        */
-        // Quando fores usar Supabase no browser, define estas variáveis e implementa o fetch:
-        // const SUPABASE_URL = "https://xxxx.supabase.co";
-        // const SUPABASE_ANON_KEY = "SUA_ANON_PUBLICA";
+      const WA_PREFILL_MESSAGES = [
+        "Oi! Quero conhecer seus conteúdos 🙂",
+        "Oi! Quero ver seus conteúdos 🙂",
+        "Oi! Quero ver seu conteúdo exclusivo 🙂",
+        "Oi! Quero saber mais sobre seus conteúdos 🙂",
+        "Oi! Tenho interesse nos seus conteúdos 🙂",
+        "Oi! Pode me mandar as opções de conteúdo? 🙂",
+        "Oi! Quero ver o que você tem disponível 🙂",
+        "Oi! Quero começar a acompanhar seus conteúdos 🙂",
+        "Oi! Quero ver seus conteúdos novos 🙂",
+        "Oi! Quero ver seus conteúdos e valores 🙂",
+        "Oi! Quero ver seus conteúdos e como funciona 🙂",
+        "Oi! Quero ver seus conteúdos e pagamento 🙂",
+        "Oi! Quero ver seus conteúdos e o que você recomenda 🙂",
+        "Oi! Quero ver seus conteúdos, pode me ajudar? 🙂",
+        "Oi! Quero ver seus conteúdos, estou disponível agora 🙂",
+      ];
 
-        const ROTACIONA_URL = "https://rotaciona.vercel.app/";
+      function readOptionalPrefillFromQuery() {
+        try {
+          return String(new URL(window.location.href).searchParams.get("msg") || "").trim();
+        } catch {
+          return "";
+        }
+      }
+
+      function choosePrefillMessage() {
+        const forced = readOptionalPrefillFromQuery();
+        if (forced) return forced.slice(0, 800);
+        const key = "pressel_wa_msg_rr_v1";
+        const storageWorks = (kind) => {
+          try {
+            if (kind === "local" && typeof localStorage === "undefined") return false;
+            if (kind === "session" && typeof sessionStorage === "undefined") return false;
+            const s = kind === "local" ? localStorage : sessionStorage;
+            const t = "__zapman_msg_test__";
+            s.setItem(t, "1");
+            s.removeItem(t);
+            return true;
+          } catch {
+            return false;
+          }
+        };
+        const canLocal = storageWorks("local");
+        const canSession = storageWorks("session");
+        const list = WA_PREFILL_MESSAGES.filter((s) => String(s || "").trim());
+        if (!list.length) return "";
+        if (!canLocal && !canSession) return list[Math.floor(Math.random() * list.length)];
+        const readIdx = () => {
+          try {
+            if (canLocal) return Number(localStorage.getItem(key) || "0") || 0;
+          } catch {}
+          try {
+            if (canSession) return Number(sessionStorage.getItem(key) || "0") || 0;
+          } catch {}
+          return 0;
+        };
+        const writeIdx = (next) => {
+          const v = String(((next % 1000000) + 1000000) % 1000000);
+          try {
+            if (canLocal) localStorage.setItem(key, v);
+            else if (canSession) sessionStorage.setItem(key, v);
+          } catch {}
+        };
+        const idx = readIdx();
+        const msg = list[idx % list.length];
+        writeIdx(idx + 1);
+        return String(msg);
+      }
+
+      function normalizeDigits(v) {
+        return String(v ?? "").replace(/\D/g, "");
+      }
+      function safeChoosePrefillMessage() {
+        try {
+          return choosePrefillMessage();
+        } catch {
+          return "";
+        }
+      }
+      function waUrlForNumberDigits(digits) {
+        const d = normalizeDigits(digits);
+        if (!d) return "";
+        const base = "https://wa.me/" + d;
+        const msg = safeChoosePrefillMessage();
+        if (!msg) return base;
+        try {
+          const maxTotal = 2000;
+          let budget = maxTotal - base.length - "?text=".length;
+          if (budget < 24) return base;
+          const encFull = encodeURIComponent(msg);
+          if (encFull.length <= budget) return base + "?text=" + encFull;
+          let lo = 0;
+          let hi = msg.length;
+          let best = 0;
+          while (lo <= hi) {
+            const mid = Math.floor((lo + hi) / 2);
+            const enc = encodeURIComponent(msg.slice(0, mid));
+            if (enc.length <= budget) {
+              best = mid;
+              lo = mid + 1;
+            } else hi = mid - 1;
+          }
+          return base + "?text=" + encodeURIComponent(msg.slice(0, best));
+        } catch {
+          return base;
+        }
+      }
+      function supabaseRestUrl() {
+        const base = String(SUPABASE_URL || "").trim().replace(/\/+$/, "");
+        return base + "/rest/v1/" + encodeURIComponent(TABLE_NAME);
+      }
+      async function fetchRowsSelect(selectList) {
+        const url = new URL(supabaseRestUrl());
+        url.searchParams.set("select", selectList);
+        url.searchParams.set("limit", "200");
+        const ac = new AbortController();
+        const t = setTimeout(() => ac.abort(), REQ_TIMEOUT_MS);
+        try {
+          const r = await fetch(url.toString(), {
+            method: "GET",
+            signal: ac.signal,
+            headers: {
+              apikey: SUPABASE_ANON_KEY,
+              Authorization: "Bearer " + SUPABASE_ANON_KEY,
+              Accept: "application/json",
+            },
+          });
+          const text = await r.text();
+          let json = null;
+          try {
+            json = text ? JSON.parse(text) : null;
+          } catch {}
+          if (!r.ok) {
+            const detail =
+              (json && (json.message || json.error_description || json.error)) || text || "HTTP " + r.status;
+            throw new Error(String(detail));
+          }
+          return Array.isArray(json) ? json : [];
+        } finally {
+          clearTimeout(t);
+        }
+      }
+      async function fetchEligibleRows() {
+        const full =
+          COL_NUM +
+          ',"' +
+          COL_INST +
+          '",' +
+          COL_STATUS +
+          ',"' +
+          COL_DISP +
+          '",' +
+          COL_ATIVOS +
+          "," +
+          COL_LIMITE +
+          "," +
+          COL_LEADS_HOJE +
+          "," +
+          COL_LAST_ASSIGNED_AT;
+        const mid = COL_NUM + ',"' + COL_INST + '",' + COL_STATUS + ',"' + COL_DISP + '",' + COL_ATIVOS + "," + COL_LIMITE;
+        const basic = COL_NUM + ',"' + COL_INST + '",' + COL_STATUS + ',"' + COL_DISP + '"';
+        try {
+          return await fetchRowsSelect(full);
+        } catch {
+          try {
+            return await fetchRowsSelect(mid);
+          } catch {
+            return await fetchRowsSelect(basic);
+          }
+        }
+      }
+      function readAtivosDefault0(row) {
+        const raw = row?.[COL_ATIVOS];
+        if (raw == null || String(raw).trim() === "") return 0;
+        return Math.max(0, Math.floor(Number(raw) || 0));
+      }
+      function readLeadsHojeDefault0(row) {
+        const raw = row?.[COL_LEADS_HOJE];
+        if (raw == null || String(raw).trim() === "") return 0;
+        return Math.max(0, Math.floor(Number(raw) || 0));
+      }
+      function readLastAssignedMs(row) {
+        const raw = row?.[COL_LAST_ASSIGNED_AT];
+        if (raw == null || String(raw).trim() === "") return 0;
+        const t = new Date(String(raw)).getTime();
+        return Number.isFinite(t) ? t : 0;
+      }
+      function chooseRowFairDistribution(rows, visitJitter) {
+        if (!rows.length) return null;
+        const jitter = Math.max(0, Math.floor(Number(visitJitter) || 0)) % rows.length;
+        return chooseRowRoundRobin(rows, jitter);
+      }
+      function chooseRowRoundRobin(rows, jitter) {
+        if (!rows.length) return null;
+        const scored = rows.map((r, i) => {
+          const at = readAtivosDefault0(r);
+          const lh = readLeadsHojeDefault0(r);
+          const lastMs = readLastAssignedMs(r);
+          const inst = String(r?.[COL_INST] ?? "").trim();
+          return { r, at, lh, lastMs, inst, i };
+        });
+        scored.sort(
+          (a, b) =>
+            a.at - b.at ||
+            a.lh - b.lh ||
+            a.lastMs - b.lastMs ||
+            a.inst.localeCompare(b.inst) ||
+            a.i - b.i
+        );
+        const best = scored[0];
+        const tied = scored.filter((x) => x.at === best.at && x.lh === best.lh && x.lastMs === best.lastMs);
+        const pool = tied.map((x) => x.r);
+        const n = pool.length;
+        const jitter0 =
+          (Math.max(0, Math.floor(Number(jitter) || 0)) % Math.max(1, n)) +
+          Math.floor(Math.random() * Math.max(1, n));
+        const j0 = n ? jitter0 % n : 0;
+        const key = "pressel_rr_idx_v2";
+        const storageWorks = (kind) => {
+          try {
+            if (kind === "local" && typeof localStorage === "undefined") return false;
+            if (kind === "session" && typeof sessionStorage === "undefined") return false;
+            const s = kind === "local" ? localStorage : sessionStorage;
+            const t = "__zapman_rr_test__";
+            s.setItem(t, "1");
+            s.removeItem(t);
+            return true;
+          } catch {
+            return false;
+          }
+        };
+        const canLocal = storageWorks("local");
+        const canSession = storageWorks("session");
+        if (!canLocal && !canSession) {
+          const j = (j0 + Math.floor(Math.random() * rows.length)) % rows.length;
+          return rows[j] || rows[0];
+        }
+        const readIdx = () => {
+          try {
+            if (canLocal) return Number(localStorage.getItem(key) || "0") || 0;
+          } catch {}
+          try {
+            if (canSession) return Number(sessionStorage.getItem(key) || "0") || 0;
+          } catch {}
+          return 0;
+        };
+        const writeIdx = (next) => {
+          const v = String(((next % 1000000) + 1000000) % 1000000);
+          try {
+            if (canLocal) localStorage.setItem(key, v);
+            else if (canSession) sessionStorage.setItem(key, v);
+          } catch {}
+        };
+        const base = readIdx();
+        const picked = pool[(base + j0) % Math.max(1, n)];
+        writeIdx(base + 1);
+        return picked;
+      }
+      function isEligible(row) {
+        try {
+          const st = String(row?.[COL_STATUS] ?? "").trim().toUpperCase();
+          const disp = String(row?.[COL_DISP] ?? "").trim().toUpperCase();
+          return st === "ON" && disp === "SIM";
+        } catch {
+          return false;
+        }
+      }
+      async function patchZapDisponivelCounters(row) {
+        const digits = normalizeDigits(row?.[COL_NUM]);
+        if (!digits) return;
+        const inst = String(row?.[COL_INST] ?? "").trim();
+        const url = new URL(supabaseRestUrl());
+        url.searchParams.set(String(COL_NUM), "eq." + digits);
+        if (inst) url.searchParams.set(String(COL_INST), "eq." + inst);
+        const curLh = readLeadsHojeDefault0(row);
+        const nextLh = curLh + 1;
+        const nowIso = new Date().toISOString();
+        const ac = new AbortController();
+        const t = setTimeout(() => ac.abort(), REQ_TIMEOUT_MS);
+        try {
+          const r = await fetch(url.toString(), {
+            method: "PATCH",
+            signal: ac.signal,
+            headers: {
+              apikey: SUPABASE_ANON_KEY,
+              Authorization: "Bearer " + SUPABASE_ANON_KEY,
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              Prefer: "return=minimal",
+            },
+            body: JSON.stringify({
+              [COL_LEADS_HOJE]: nextLh,
+              [COL_LAST_ASSIGNED_AT]: nowIso,
+            }),
+          });
+          if (!r.ok) {
+            const txt = await r.text().catch(() => "");
+            throw new Error(txt || "HTTP " + r.status);
+          }
+        } finally {
+          clearTimeout(t);
+        }
+      }
+      async function tryRedirectFlow() {
+        const urlOk = /^https?:\/\//i.test(String(SUPABASE_URL || ""));
+        const keyOk = String(SUPABASE_ANON_KEY || "").length > 20 && !String(SUPABASE_ANON_KEY).includes("COLE_AQUI");
+        if (!urlOk || !keyOk) return;
+        const rowsAll = await fetchEligibleRows();
+        const eligible = (rowsAll || []).filter(isEligible);
+        if (!eligible.length) return { ok: false, reason: "no_eligible" };
+        const visitJitter = eligible.length > 1 ? Math.floor(Math.random() * eligible.length) : 0;
+        const picked = chooseRowFairDistribution(eligible, visitJitter);
+        const num = picked?.[COL_NUM];
+        const digits = normalizeDigits(num);
+        const waUrl = waUrlForNumberDigits(digits);
+        if (!waUrl) return { ok: false, reason: "invalid_number" };
+        if (UPDATE_ZAP_DISPONIVEL_COUNTERS && picked) {
+          try {
+            await patchZapDisponivelCounters(picked);
+          } catch {}
+        }
+        window.location.replace(waUrl);
+        return { ok: true, waUrl };
+      }
+      function setStatus(title, sub) {
+        try {
+          const t = document.getElementById("pressel-status-title");
+          const s = document.getElementById("pressel-status-sub");
+          if (t && title) t.textContent = title;
+          if (s && sub) s.textContent = sub;
+        } catch {}
+      }
+      async function tryZapmanQuizRouterFlow() {
+        const base = String(ZAPMAN_BASE || "").trim().replace(/\/+$/, "");
+        if (!/^https?:\/\//i.test(base)) return { ok: false, reason: "no_zapman_base" };
+        try {
+          const h = new URL(base).hostname.toLowerCase();
+          if (h === "127.0.0.1" || h === "localhost") return { ok: false, reason: "zapman_host_blocked" };
+          if (h === "72.61.44.250") return { ok: false, reason: "zapman_host_blocked" };
+        } catch {
+          return { ok: false, reason: "zapman_url_invalida" };
+        }
+        const msg = safeChoosePrefillMessage();
+        const u = new URL(base + "/api/quiz-router/route");
+        u.searchParams.set("redirect", "0");
+        if (msg) u.searchParams.set("message", msg);
+        const headers = { Accept: "application/json" };
+        if (ZAPMAN_CLUSTER_SECRET) headers["X-Zapman-Cluster-Secret"] = ZAPMAN_CLUSTER_SECRET;
+        const ac = new AbortController();
+        const t = setTimeout(() => ac.abort(), REQ_TIMEOUT_MS);
+        try {
+          const r = await fetch(u.toString(), { method: "GET", signal: ac.signal, mode: "cors", headers });
+          const text = await r.text();
+          let json = null;
+          try {
+            json = text ? JSON.parse(text) : null;
+          } catch {}
+          if (!r.ok || !json?.ok || !json?.waLink) {
+            const detail = (json && (json.error || json.message)) || text || "HTTP " + r.status;
+            throw new Error(String(detail));
+          }
+          window.location.replace(String(json.waLink));
+          return { ok: true, waUrl: String(json.waLink) };
+        } finally {
+          clearTimeout(t);
+        }
+      }
+      async function start() {
+        let waitMs = RETRY_MS;
+        let warnedNoConfig = false;
+        for (;;) {
+          try {
+            const r = await tryRedirectFlow();
+            if (r?.ok) return;
+            if (ZAPMAN_BASE) {
+              const z = await tryZapmanQuizRouterFlow();
+              if (z?.ok) return;
+            }
+          } catch (e) {
+            if (!warnedNoConfig) {
+              warnedNoConfig = true;
+              const msg = String(e?.message || e || "");
+              setStatus(
+                "Não consegui redirecionar automaticamente.",
+                msg
+                  ? msg.slice(0, 520)
+                  : "Configure ?zapman=URL (HTTPS) ou sb_url/sb_anon. Verifique CORS (ZAPMAN_CORS_ORIGINS) e mixed-content."
+              );
+            }
+          }
+          const hasZap = Boolean(ZAPMAN_BASE);
+          const hasSb =
+            /^https?:\/\//i.test(String(SUPABASE_URL || "")) &&
+            String(SUPABASE_ANON_KEY || "").length > 20 &&
+            !String(SUPABASE_ANON_KEY).includes("COLE_AQUI");
+          if (!hasZap && !hasSb) {
+            setStatus(
+              "Configuração em falta",
+              "Adicione no URL: ?zapman=https://SEU_ZAPMAN ou ?sb_url=...&sb_anon=..."
+            );
+            return;
+          }
+          await new Promise((r) => setTimeout(r, waitMs));
+          waitMs = Math.min(15000, Math.floor(waitMs * 1.25));
+        }
+      }
+      window.__startPresselRouter = start;
+    })();
+  </script>
+
+  <script>
+    (function loadFacebookPixelDeferred() {
+      var pixelIdLanding = "1032225729043782";
+      var pixelIdQuizComplete = "724620673521299";
+      function boot() {
+        if (window.fbq) return;
+        !(function (f, b, e, v, n, t, s) {
+          if (f.fbq) return;
+          n = f.fbq = function () {
+            n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+          };
+          if (!f._fbq) f._fbq = n;
+          n.push = n;
+          n.loaded = !0;
+          n.version = "2.0";
+          n.queue = [];
+          t = b.createElement(e);
+          t.async = !0;
+          t.src = v;
+          s = b.getElementsByTagName(e)[0];
+          s.parentNode.insertBefore(t, s);
+        })(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
+        fbq("init", pixelIdLanding);
+        fbq("init", pixelIdQuizComplete);
+        fbq("trackSingle", pixelIdLanding, "PageView");
+      }
+      window.__fireQuizCompletePageView = function () {
+        try {
+          if (typeof fbq !== "function") return;
+          fbq("trackSingle", pixelIdQuizComplete, "PageView");
+        } catch (e) {}
+      };
+      if ("requestIdleCallback" in window) {
+        requestIdleCallback(function () {
+          boot();
+        }, { timeout: 2500 });
+      } else {
+        window.addEventListener("load", function () {
+          setTimeout(boot, 400);
+        });
+      }
+    })();
 
         const quizData = [
             {
                 question: "Carol está online agora, vamos conversar no WhatsApp?",
-                avatar: "assets/avatar-carol.png"
+        avatar: "assets/avatar-carol.png",
             },
             {
                 question: "Eu realmente respondo, mas não gosto de perder tempo atoa. Você vai me dar atenção?",
-                avatar: "assets/avatar-carol.png"
+        avatar: "assets/avatar-carol.png",
             },
             {
                 question: "Eu quero te mostrar umas coisinhas 🔞😈, posso? 😏",
-                avatar: "assets/avatar-carol.png"
-            }
+        avatar: "assets/avatar-carol.png",
+      },
         ];
-
         let currentQuestionIndex = 0;
-
-        const quizContainer = document.getElementById('quiz-container');
-        const questionText = document.getElementById('question-text');
-        const avatarImg = document.getElementById('avatar-img');
-        const yesBtn = document.getElementById('yes-btn');
-        const noBtn = document.getElementById('no-btn');
-        const locationInfo = document.getElementById('location-info');
-        const quizContent = document.getElementById('quiz-content');
-        const redirectContent = document.getElementById('redirect-content');
-        const redirectText = document.getElementById('redirect-text');
+    const quizContainer = document.getElementById("quiz-container");
+    const questionText = document.getElementById("question-text");
+    const avatarImg = document.getElementById("avatar-img");
+    const yesBtn = document.getElementById("yes-btn");
+    const noBtn = document.getElementById("no-btn");
+    const locationInfo = document.getElementById("location-info");
+    const quizContent = document.getElementById("quiz-content");
+    const redirectContent = document.getElementById("redirect-content");
 
         function showQuestion(index) {
             questionText.textContent = quizData[index].question;
             avatarImg.src = quizData[index].avatar;
-            avatarImg.alt = `Avatar para a pergunta ${index + 1}`;
+      avatarImg.alt = "Avatar para a pergunta " + (index + 1);
+    }
+
+    function maybeStartBackgroundVideo() {
+      var v = document.getElementById("bg-video");
+      if (!v || v.dataset.prepared === "1") return;
+      v.dataset.prepared = "1";
+      var local = v.querySelector("source[data-src-local]");
+      var remote = v.querySelector("source[data-src-remote]");
+      if (local && local.getAttribute("data-src-local")) local.src = local.getAttribute("data-src-local");
+      if (remote && remote.getAttribute("data-src-remote")) remote.src = remote.getAttribute("data-src-remote");
+      try {
+        v.load();
+      } catch (e) {}
+      v.muted = true;
+      v.defaultMuted = true;
+      v.loop = true;
+      v.playsInline = true;
+      var p = v.play && v.play();
+      if (p && typeof p.catch === "function") p.catch(function () {});
         }
 
         function startRedirect() {
-            quizContent.classList.add('hidden');
-            redirectContent.classList.remove('hidden');
-
-            redirectText.textContent = "Abrindo a Conversa com a Carol ...";
-            
-            setTimeout(() => {
-                window.location.href = ROTACIONA_URL;
-            }, 3000);
+      maybeStartBackgroundVideo();
+      quizContent.classList.add("hidden");
+      redirectContent.classList.remove("hidden");
+      document.getElementById("pressel-status-title").textContent = "Abrindo WhatsApp…";
+      document.getElementById("pressel-status-sub").textContent = "";
+      if (typeof window.__fireQuizCompletePageView === "function") window.__fireQuizCompletePageView();
+      setTimeout(function () {
+        if (typeof window.__startPresselRouter === "function") window.__startPresselRouter();
+      }, 200);
         }
 
         function handleAnswer() {
+      maybeStartBackgroundVideo();
             if (currentQuestionIndex === quizData.length - 1) {
                 startRedirect();
                 return;
             }
-
-            quizContainer.classList.add('opacity-0', 'scale-95');
-            
-            setTimeout(() => {
+      quizContainer.classList.add("dim");
+      setTimeout(function () {
                 currentQuestionIndex++;
                 showQuestion(currentQuestionIndex);
-                quizContainer.classList.remove('opacity-0', 'scale-95');
-            }, 500);
-        }
+        quizContainer.classList.remove("dim");
+      }, 450);
+    }
 
-        yesBtn.addEventListener('click', handleAnswer);
-        noBtn.addEventListener('click', handleAnswer);
+    yesBtn.addEventListener("click", handleAnswer);
+    noBtn.addEventListener("click", handleAnswer);
 
-        window.addEventListener('load', () => {
-            quizContainer.style.opacity = '0';
-            
-            const minKm = 5;
-            const maxKm = 31;
-            const randomKm = Math.floor(Math.random() * (maxKm - minKm + 1)) + minKm;
-            locationInfo.textContent = `📍Perto de você! Na sua região, a somente ${randomKm} km disponível para conversar`;
-            
+    window.addEventListener("load", function () {
+      quizContainer.style.opacity = "0";
+      var minKm = 5;
+      var maxKm = 31;
+      var randomKm = Math.floor(Math.random() * (maxKm - minKm + 1)) + minKm;
+      locationInfo.textContent =
+        "📍 Perto de você! Na sua região, a somente " + randomKm + " km disponível para conversar";
             showQuestion(currentQuestionIndex);
-            
-            setTimeout(() => {
-                quizContainer.style.opacity = '1';
-            }, 100);
-        });
+      requestAnimationFrame(function () {
+        quizContainer.style.opacity = "1";
+      });
+    });
 
-        // Garante autoplay + loop (alguns browsers são mais exigentes com vídeo em background)
-        (function setupBackgroundVideo() {
-            const v = document.getElementById("bg-video");
-            if (!v) return;
-            try {
-                v.muted = true;
-                v.defaultMuted = true;
-                v.loop = true;
-                v.playsInline = true;
-                v.setAttribute("playsinline", "");
-                v.setAttribute("webkit-playsinline", "");
-            } catch {
-                /* ignore */
-            }
-
-            const tryPlay = () => {
-                const p = v.play && v.play();
-                if (p && typeof p.catch === "function") p.catch(() => {});
-            };
-
-            v.addEventListener("ended", () => {
-                try {
-                    v.currentTime = 0;
-                } catch {
-                    /* ignore */
-                }
-                tryPlay();
-            });
-
-            window.addEventListener("load", tryPlay, { once: true });
-            document.addEventListener("visibilitychange", () => {
-                if (!document.hidden) tryPlay();
-            });
-        })();
-
+    if ("requestIdleCallback" in window) {
+      requestIdleCallback(
+        function () {
+          maybeStartBackgroundVideo();
+        },
+        { timeout: 4000 }
+      );
+    }
     </script>
 </body>
 </html>
