@@ -239,6 +239,7 @@
     (function () {
       const ZAPMAN_BASE_DEFAULT = "";
       const SUPABASE_URL_DEFAULT = "https://ksseeadjghthpeqefdub.supabase.co/";
+      const SUPABASE_CANONICAL_HOST = "ksseeadjghthpeqefdub.supabase.co";
       const SUPABASE_ANON_KEY_DEFAULT =
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtzc2VlYWRqZ2h0aHBlcWVmZHViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyODg1NjUsImV4cCI6MjA5Mzg2NDU2NX0.gCHz8trDWooYo7B6gA8GFPS5aIgxIO52Rdvj-taO5N4";
       const TABLE_NAME = "ZAP DISPONIVEL";
@@ -255,13 +256,20 @@
       const RETRY_MS = 1200;
       const REQ_TIMEOUT_MS = 5000;
 
+      function isCanonicalSupabaseUrl(rawUrl) {
+        try {
+          return new URL(String(rawUrl || "").trim()).hostname.toLowerCase() === SUPABASE_CANONICAL_HOST;
+        } catch {
+          return false;
+        }
+      }
       function readSupabaseConfigFromQuery() {
         try {
           const u = new URL(window.location.href);
-          return {
-            sbUrl: String(u.searchParams.get("sb_url") || "").trim(),
-            sbAnon: String(u.searchParams.get("sb_anon") || "").trim(),
-          };
+          const sbUrl = String(u.searchParams.get("sb_url") || "").trim();
+          const sbAnon = String(u.searchParams.get("sb_anon") || "").trim();
+          if (!sbUrl || !isCanonicalSupabaseUrl(sbUrl)) return { sbUrl: "", sbAnon: "" };
+          return { sbUrl, sbAnon };
         } catch {
           return { sbUrl: "", sbAnon: "" };
         }
