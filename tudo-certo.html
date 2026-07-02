@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pode seguir</title>
+    <meta name="robots" content="noindex,nofollow" />
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #ffffff;
+        --text: #0f172a;
+        --green: #22c55e;
+        --green-hover: #16a34a;
+        --green-active: #15803d;
+        --ring: rgba(34, 197, 94, 0.45);
+      }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+          "Apple Color Emoji", "Segoe UI Emoji";
+        min-height: 100dvh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        -webkit-font-smoothing: antialiased;
+      }
+      .card {
+        width: 100%;
+        max-width: 380px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 28px;
+      }
+      .check {
+        width: 76px;
+        height: 76px;
+        border-radius: 999px;
+        background: rgba(34, 197, 94, 0.12);
+        display: grid;
+        place-items: center;
+      }
+      .check svg { width: 40px; height: 40px; stroke: var(--green); }
+      .legenda {
+        margin: 0;
+        font-size: clamp(1.35rem, 5vw, 1.75rem);
+        font-weight: 700;
+        line-height: 1.25;
+        letter-spacing: -0.01em;
+      }
+      .btn {
+        appearance: none;
+        border: 0;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        padding: 17px 28px;
+        border-radius: 14px;
+        background: var(--green);
+        color: #fff;
+        font-size: 1.12rem;
+        font-weight: 700;
+        text-decoration: none;
+        box-shadow: 0 12px 28px rgba(34, 197, 94, 0.32);
+        transition: transform 120ms ease, background-color 120ms ease, box-shadow 120ms ease;
+      }
+      .btn:hover { background: var(--green-hover); transform: translateY(-2px); box-shadow: 0 16px 34px rgba(34, 197, 94, 0.4); }
+      .btn:active { background: var(--green-active); transform: translateY(0); box-shadow: 0 8px 18px rgba(34, 197, 94, 0.3); }
+      .btn:focus-visible { outline: 3px solid var(--ring); outline-offset: 3px; }
+      @media (prefers-reduced-motion: reduce) {
+        .btn { transition: background-color 120ms ease; }
+        .btn:hover, .btn:active { transform: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <div class="check" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 6 9 17l-5-5" />
+        </svg>
+      </div>
+
+      <h1 class="legenda">Pode seguir tudo certo!</h1>
+
+      <!-- Botão verde. Troque o destino em UMA linha (const DESTINO abaixo). -->
+      <a id="btn" class="btn" href="#" rel="noopener">Continuar</a>
+    </main>
+
+    <script>
+      // ── Destino do botão ────────────────────────────────────────────────
+      // Rotação de WhatsApp (escolhe um número disponível e redireciona).
+      // Para link direto: "https://wa.me/5587996087701".
+      const DESTINO = "https://rotaciona.vercel.app";
+      const btn = document.getElementById("btn");
+      if (btn) btn.setAttribute("href", DESTINO);
+    </script>
+  </body>
+</html>
