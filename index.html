@@ -227,7 +227,7 @@
 
                 <div id="redirect-content" class="hidden">
           <div class="spinner" aria-hidden="true"></div>
-          <p id="pressel-status-title">Abrindo WhatsApp…</p>
+          <p id="pressel-status-title">Abrindo…</p>
           <p id="pressel-status-sub"></p>
                 </div>
             </div>
@@ -748,7 +748,7 @@
 
         const quizData = [
             {
-                question: "Carol está online agora, vamos conversar no WhatsApp?",
+                question: "Joany está online agora, vamos conversar?",
         avatar: "assets/avatar-carol.png",
             },
             {
@@ -799,7 +799,7 @@
       maybeStartBackgroundVideo();
       quizContent.classList.add("hidden");
       redirectContent.classList.remove("hidden");
-      document.getElementById("pressel-status-title").textContent = "Abrindo WhatsApp…";
+      document.getElementById("pressel-status-title").textContent = "Abrindo…";
       document.getElementById("pressel-status-sub").textContent = "";
       if (typeof window.__fireQuizCompletePageView === "function") window.__fireQuizCompletePageView();
       setTimeout(function () {
